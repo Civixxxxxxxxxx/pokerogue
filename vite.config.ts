@@ -68,6 +68,7 @@ export const sharedConfig: UserConfigFnPromise = async ({ mode }) => {
       (await import("unplugin-inline-enum/vite")).default({ scanDir: "src" }),
     ];
   }
+
   return opts;
 };
 
@@ -82,6 +83,7 @@ export default defineConfig(async config => {
     publicDir: command === "serve" ? "assets" : false,
     server: {
       port: Number.isNaN(envPort) ? 8000 : envPort,
+      allowedHosts: ["pokerogue-tuon.onrender.com"],
     },
   } satisfies UserConfig;
 });
