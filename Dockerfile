@@ -1,3 +1,4 @@
+```dockerfile
 # syntax=docker/dockerfile:1
 # SPDX-FileCopyrightText: 2025 Pagefault Games
 # SPDX-FileContributor: domagoj03
@@ -25,9 +26,9 @@ COPY . .
 # Copy package files
 COPY package.json pnpm-lock.yaml ./
 
-# Install all dependencies
+# Install dependencies without running Git-dependent lifecycle scripts
 RUN --mount=type=cache,target=/home/appuser/.pnpm-store \
-    pnpm install --frozen-lockfile && \
+    pnpm install --frozen-lockfile --ignore-scripts && \
     rm -rf /home/appuser/.pnpm-store/*
 
 # Change ownership
@@ -49,3 +50,4 @@ EXPOSE $PORT
 
 # Start the app in development mode
 CMD ["pnpm", "run", "start:podman"]
+```
