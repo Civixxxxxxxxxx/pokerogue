@@ -30,6 +30,9 @@ RUN --mount=type=cache,target=/home/appuser/.pnpm-store \
     pnpm install --frozen-lockfile --ignore-scripts && \
     rm -rf /home/appuser/.pnpm-store/*
 
+# Build static production bundle
+RUN pnpm build
+
 # Change ownership
 RUN chown -R appuser:appgroup /app
 
@@ -37,16 +40,14 @@ RUN chown -R appuser:appgroup /app
 USER appuser
 
 # Environment variables
-# Render supplies PORT automatically; do not hard-code it here.
 ENV VITE_BYPASS_LOGIN=1 \
     VITE_BYPASS_TUTORIAL=0 \
     NEXT_TELEMETRY_DISABLED=1 \
     PNP_HOME=/home/appuser/.shrc \
-    NODE_ENV=development
+    NODE_ENV=production
 
 # Expose Render's default port
 EXPOSE 10000
 
-# Start PokéRogue
-# start:podman uses Vite with --host 0.0.0.0 and --port $PORT
-CMD ["pnpm", "run", "start:podman"]
+# Serve static build using pnpm dlx serve
+CMD ["pnpm", "dlx", "serve", "-s", "dist", "-l", "10000"]
